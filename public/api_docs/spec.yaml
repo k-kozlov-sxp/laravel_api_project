@@ -1,0 +1,61 @@
+openapi: 3.0.3
+info:
+  title: Бронирования и товары
+  description: API спецификация для управления бронированиями и товарами
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8000/api/v1
+tags:
+  - name: item
+    description: Everything about items
+  - name: booking
+    description: Everything about bookings
+  - name: bookings and items
+    description: Everything about relationship
+paths:
+  /items:
+    $ref: "items.yaml#/paths/items"
+  /items/{itemId}:
+    $ref: "items.yaml#/paths/item"
+  /bookings:
+    $ref: "bookings.yaml#/paths/bookings"
+  /bookings/{bookingId}:
+    $ref: "bookings.yaml#/paths/booking"
+  /items/{itemId}/bookings:
+    $ref: "bookings_and_items.yaml#/paths/bookingsByItemId"
+components:
+  schemas:
+    Booking:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        item_id:
+          type: integer
+          format: int64
+          example: 1
+        start_date:
+          type: string
+          format: date
+          example: 20-01-2002
+        end_date:
+          type: string
+          format: date
+          example: 25-01-2002
+    Item:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: electric scooter
+        company:
+          type: string
+          example: Yandex
+
+

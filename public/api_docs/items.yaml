@@ -1,0 +1,206 @@
+paths:
+  items:
+    get:
+      tags:
+        - item
+      summary: Получить список товаров
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessGetItems'
+        '500':
+          $ref: './errors.yaml#/components/responses/ServerError'
+    post:
+      tags:
+        - item
+      summary: Создать новый товар
+      requestBody:
+        $ref: '#/components/requestBodies/CreateItem'
+      responses:
+        '201':
+          $ref: '#/components/responses/SuccessCreateItem'
+        '400':
+          $ref: './errors.yaml#/components/responses/BadRequestError'
+        '500':
+          $ref: './errors.yaml#/components/responses/ServerError'
+  item:
+    get:
+      tags:
+        - item
+      summary: Получить информацию о товаре
+      parameters:
+        - $ref: '#/components/parameters/itemId'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessGetItem'
+        '404':
+          $ref: './errors.yaml#/components/responses/NotFoundItemError'
+        '500':
+          $ref: './errors.yaml#/components/responses/ServerError'
+    put:
+      tags:
+        - item
+      summary: Заменить товар
+      parameters:
+        - $ref: '#/components/parameters/itemId'
+      requestBody:
+        $ref: '#/components/requestBodies/ReplaceItem'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessReplaceItem'
+        '400':
+          $ref: './errors.yaml#/components/responses/BadRequestError'
+        '404':
+          $ref: './errors.yaml#/components/responses/NotFoundItemError'
+        '500':
+          $ref: './errors.yaml#/components/responses/ServerError'
+    patch:
+      tags:
+        - item
+      summary: Частично изменить товар
+      parameters:
+        - $ref: '#/components/parameters/itemId'
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateItem'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessUpdateItem'
+        '400':
+          $ref: './errors.yaml#/components/responses/BadRequestError'
+        '404':
+          $ref: './errors.yaml#/components/responses/NotFoundItemError'
+        '500':
+          $ref: './errors.yaml#/components/responses/ServerError'
+    delete:
+      tags:
+        - item
+      summary: Удалить товар
+      parameters:
+        - $ref: '#/components/parameters/itemId'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessDeleteItem'
+        '404':
+          $ref: './errors.yaml#/components/responses/NotFoundItemError'
+        '500':
+          $ref: './errors.yaml#/components/responses/ServerError'
+components:
+  schemas:
+    Item:
+      $ref: './spec.yaml#/components/schemas/Item'
+    RequestBodyItem:
+      type: object
+      properties:
+        name:
+          type: string
+          example: electric scooter
+        company:
+          type: string
+          example: Yandex
+    RequestBodyCreateItem:
+      allOf:
+        - $ref: '#/components/schemas/RequestBodyItem'
+      required:
+        - name
+        - company
+    RequestBodyReplaceItem:
+      allOf:
+        - $ref: '#/components/schemas/RequestBodyItem'
+      required:
+        - name
+        - company
+    RequestBodyUpdateItem:
+      allOf:
+        - $ref: '#/components/schemas/RequestBodyItem'
+    ResponseAllItems:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+      required:
+        - data
+    ResponseItem:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Item'
+      required:
+        - data
+    ResponseDeleteItem:
+      type: object
+      properties:
+        data:
+          type: object
+          nullable: true
+          example: null
+      required:
+        - data
+  parameters:
+    itemId:
+      name: itemId
+      in: path
+      description: ID товара
+      required: true
+      schema:
+        type: integer
+        format: int64
+  requestBodies:
+    CreateItem:
+      description: Данные для создания товара
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RequestBodyCreateItem'
+      required: true
+    ReplaceItem:
+      description: Данные для замены товара
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RequestBodyReplaceItem'
+      required: true
+    UpdateItem:
+      description: Данные для частичного изменения товара
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RequestBodyUpdateItem'
+      required: true
+  responses:
+    SuccessGetItems:
+      description: Успешный запрос!
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseAllItems'
+    SuccessCreateItem:
+      description: Успех! Товар создан
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseItem'
+    SuccessGetItem:
+      description: Успешный запрос!
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseItem'
+    SuccessReplaceItem:
+      description: Успех! Товар заменен
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseItem'
+    SuccessUpdateItem:
+      description: Успех! Товар частично изменен
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseItem'
+    SuccessDeleteItem:
+      description: Успех! Товар удален
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseDeleteItem'

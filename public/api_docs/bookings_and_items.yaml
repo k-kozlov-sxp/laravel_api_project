@@ -1,0 +1,45 @@
+paths:
+  bookingsByItemId:
+    get:
+      tags:
+        - bookings and items
+      summary: Получить список бронирований на определенный товар
+      parameters:
+        - $ref: '#/components/parameters/bookingId'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessGetBookingsByItemId'
+        '404':
+          $ref: './errors.yaml#/components/responses/NotFoundItemError'
+        '500':
+          $ref: './errors.yaml#/components/responses/ServerError'
+
+components:
+  schemas:
+    Booking:
+      $ref: './spec.yaml#/components/schemas/Booking'
+    ResponseAllBookingsByItemId:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Booking'
+      required:
+        - data
+  parameters:
+    bookingId:
+      name: bookingId
+      in: path
+      description: ID бронирования
+      required: true
+      schema:
+        type: integer
+        format: int64
+  responses:
+    SuccessGetBookingsByItemId:
+      description: Успешный запрос!
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseAllBookingsByItemId'

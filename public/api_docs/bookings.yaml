@@ -1,0 +1,216 @@
+paths:
+  bookings:
+    get:
+      tags:
+        - booking
+      summary: Получить список бронирований
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessGetBookings'
+        '500':
+          $ref: './errors.yaml#/components/responses/ServerError'
+    post:
+      tags:
+        - booking
+      summary: Создать новое бронирование
+      requestBody:
+        $ref: '#/components/requestBodies/CreateBooking'
+      responses:
+        '201':
+          $ref: '#/components/responses/SuccessCreateBooking'
+        '400':
+          $ref: './errors.yaml#/components/responses/BadRequestError'
+        '500':
+          $ref: './errors.yaml#/components/responses/ServerError'
+  booking:
+    get:
+      tags:
+        - booking
+      summary: Получить информацию о бронировании
+      parameters:
+        - $ref: '#/components/parameters/bookingId'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessGetBooking'
+        '404':
+          $ref: './errors.yaml#/components/responses/NotFoundBookingError'
+        '500':
+          $ref: './errors.yaml#/components/responses/ServerError'
+    put:
+      tags:
+        - booking
+      summary: Заменить бронирование
+      parameters:
+        - $ref: '#/components/parameters/bookingId'
+      requestBody:
+        $ref: '#/components/requestBodies/ReplaceBooking'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessReplaceBooking'
+        '400':
+          $ref: './errors.yaml#/components/responses/BadRequestError'
+        '404':
+          $ref: './errors.yaml#/components/responses/NotFoundBookingError'
+        '500':
+          $ref: './errors.yaml#/components/responses/ServerError'
+    patch:
+      tags:
+        - booking
+      summary: Частично изменить бронирование
+      parameters:
+        - $ref: '#/components/parameters/bookingId'
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateBooking'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessUpdateBooking'
+        '400':
+          $ref: './errors.yaml#/components/responses/BadRequestError'
+        '404':
+          $ref: './errors.yaml#/components/responses/NotFoundBookingError'
+        '500':
+          $ref: './errors.yaml#/components/responses/ServerError'
+    delete:
+      tags:
+        - booking
+      summary: Удалить бронирование
+      parameters:
+        - $ref: '#/components/parameters/bookingId'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessDeleteBooking'
+        '404':
+          $ref: './errors.yaml#/components/responses/NotFoundBookingError'
+        '500':
+          $ref: './errors.yaml#/components/responses/ServerError'
+components:
+  schemas:
+    Booking:
+      $ref: './spec.yaml#/components/schemas/Booking'
+    RequestBodyBooking:
+      type: object
+      properties:
+        item_id:
+          type: integer
+          format: int64
+          example: 1
+        start_date:
+          type: string
+          format: date
+          example: 20-01-2002
+        end_date:
+          type: string
+          format: date
+          example: 25-01-2002
+    RequestBodyCreateBooking:
+      allOf:
+        - $ref: '#/components/schemas/RequestBodyBooking'
+      required:
+        - name
+        - item_id
+        - start_date
+        - end_date
+    RequestBodyReplaceBooking:
+      allOf:
+        - $ref: '#/components/schemas/RequestBodyBooking'
+      required:
+        - name
+        - item_id
+        - start_date
+        - end_date
+    RequestBodyUpdateBooking:
+      allOf:
+        - $ref: '#/components/schemas/RequestBodyBooking'
+    ResponseAllBookings:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Booking'
+      required:
+        - data
+    ResponseBooking:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Booking'
+      required:
+        - data
+    ResponseDeleteBooking:
+      type: object
+      properties:
+        data:
+          type: object
+          nullable: true
+          example: null
+      required:
+        - data
+  parameters:
+    bookingId:
+      name: bookingId
+      in: path
+      description: ID бронирования
+      required: true
+      schema:
+        type: integer
+        format: int64
+  requestBodies:
+    CreateBooking:
+      description: Данные для создания бронирования
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RequestBodyCreateBooking'
+      required: true
+    ReplaceBooking:
+      description: Данные для замены бронирования
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RequestBodyReplaceBooking'
+      required: true
+    UpdateBooking:
+      description: Данные для частичного изменения бронирования
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RequestBodyUpdateBooking'
+      required: true
+  responses:
+    SuccessGetBookings:
+      description: Успешный запрос!
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseAllBookings'
+    SuccessCreateBooking:
+      description: Успех! Бронирование создано
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseBooking'
+    SuccessGetBooking:
+      description: Успешный запрос!
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseBooking'
+    SuccessReplaceBooking:
+      description: Успех! Бронирование заменено
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseBooking'
+    SuccessUpdateBooking:
+      description: Успех! Бронирование частично изменено
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseBooking'
+    SuccessDeleteBooking:
+      description: Успех! Бронирование удалено
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseDeleteBooking'

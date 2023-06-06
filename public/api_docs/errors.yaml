@@ -1,0 +1,55 @@
+components:
+  schemas:
+    ResponseError:
+      type: object
+      properties:
+        data:
+          type: object
+          nullable: true
+        errors:
+          type: array
+          description: Error array
+          items:
+            type: object
+            properties:
+              code:
+                description: Error code
+                type: string
+                enum:
+                  - INVALID_PARAMETER
+                  - PERMISSION_DENIED
+                  - RESOURCE_NOT_FOUND
+              message:
+                description: Error description
+                type: string
+            required:
+              - code
+              - message
+      required:
+        - data
+        - errors
+  responses:
+    BadRequestError:
+      description: Некорректный запрос
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseError'
+    NotFoundBookingError:
+      description: Бронирование не найдено
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseError'
+    NotFoundItemError:
+      description: Товар не найден
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseError'
+    ServerError:
+      description: Ошибка на сервере
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseError'
