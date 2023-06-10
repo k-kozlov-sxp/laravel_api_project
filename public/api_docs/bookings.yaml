@@ -97,11 +97,11 @@ components:
         start_date:
           type: string
           format: date
-          example: 20-01-2002
+          example: 2023-01-20 14:30
         end_date:
           type: string
           format: date
-          example: 25-01-2002
+          example: 2023-01-20 17:30
     RequestBodyCreateBooking:
       allOf:
         - $ref: '#/components/schemas/RequestBodyBooking'

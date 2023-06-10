@@ -5,7 +5,7 @@ paths:
         - bookings and items
       summary: Получить список бронирований на определенный товар
       parameters:
-        - $ref: '#/components/parameters/bookingId'
+        - $ref: '#/components/parameters/itemId'
       responses:
         '200':
           $ref: '#/components/responses/SuccessGetBookingsByItemId'
@@ -28,10 +28,10 @@ components:
       required:
         - data
   parameters:
-    bookingId:
-      name: bookingId
+    itemId:
+      name: itemId
       in: path
-      description: ID бронирования
+      description: ID товара
       required: true
       schema:
         type: integer
